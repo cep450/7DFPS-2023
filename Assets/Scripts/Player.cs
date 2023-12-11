@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : FPSObject
 {
 
 
-	[SerializeField] Weapon[] weapons; 
+	[SerializeField] Weapon[] weapons;
 	int currentWeaponIndex = 0; //index in the arraylist
 
     // Start is called before the first frame update
@@ -20,6 +21,11 @@ public class Player : FPSObject
     {
         
     }
+
+	public void OnJump(InputAction.CallbackContext context)
+	{
+		Debug.Log("I'm Jumping");
+	}
 
 	//current weapon player has out 
 	public Weapon GetWeapon() {
