@@ -44,17 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 598fec3b7672fa44b99eac04e9a169d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firingSpeed: 1
-  hitscan: 1
-  projectile: {fileID: 0}
-  count: 1
-  spreadX: 0
-  spreadY: 0
-  hasAltfire: 0
-  automatic: 0
-  recoilAnimation: 0
-  recoilPhysForce: 0
-  sfxFired: {fileID: 0}
+  fireModes:
+  - firingSpeed: 0
+    hitscan: 0
+    hitscanRange: 0
+    projectile: {fileID: 0}
+    count: 0
+    spreadX: 0
+    spreadY: 0
+    automatic: 0
+    recoilPhysForce: 0
+    recoilAnimation: 0
+    sfxFired: {fileID: 0}
+  switchedToCooldown: 1
   color: {r: 0, g: 0, b: 0, a: 0}
   crosshair: {fileID: 0}
   model: {fileID: 0}
