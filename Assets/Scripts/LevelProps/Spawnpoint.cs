@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Spawnpoint : MonoBehaviour
 {
+
+	Color color = Color.red; //for debug 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,4 +18,8 @@ public class Spawnpoint : MonoBehaviour
     {
         
     }
+
+	public virtual void Spawn() {
+
+	}
 }

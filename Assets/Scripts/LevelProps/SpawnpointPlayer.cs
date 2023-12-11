@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnpointPlayer : MonoBehaviour
+public class SpawnpointPlayer : Spawnpoint
 {
     // Start is called before the first frame update
     void Start()
@@ -15,4 +15,8 @@ public class SpawnpointPlayer : MonoBehaviour
     {
         
     }
+
+	public override void Spawn() {
+		//
+	}
 }

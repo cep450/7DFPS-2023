@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Billboard : MonoBehaviour
+public class Billboard : Enemy
 {
     // Start is called before the first frame update
     void Start()
