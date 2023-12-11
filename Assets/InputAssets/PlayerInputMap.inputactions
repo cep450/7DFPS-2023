@@ -1,5 +1,5 @@
 {
-    "name": "PlayerInput",
+    "name": "PlayerInputMap",
     "maps": [
         {
             "name": "Gameplay",
@@ -20,43 +20,39 @@
                     "id": "d41593bf-0f44-4132-9bdf-1551704f97df",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press",
-                    "initialStateCheck": false
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "lookY",
+                    "type": "Value",
+                    "id": "3b768b37-dcf3-4f85-abfe-576247ab9d21",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "lookX",
+                    "type": "Value",
+                    "id": "19f7d5f3-429a-4e1f-8fda-f555e260d8e6",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "3D Vector",
                     "id": "e71f88e5-4b45-45f6-8fd1-0cfc9f05c1a1",
-                    "path": "3DVector",
+                    "path": "3DVector(mode=1)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "move",
                     "isComposite": true,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "672bab06-091c-4bf6-8425-2c0bc034c78e",
-                    "path": "<Mouse>/delta/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "8fffa4f0-7c1c-438f-b27d-df60a184bcbd",
-                    "path": "<Keyboard>/{Back}",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 },
                 {
                     "name": "left",
@@ -106,10 +102,32 @@
                     "name": "",
                     "id": "d9b2c451-a363-4ccf-96a1-7b8bd6479d86",
                     "path": "<Keyboard>/space",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d7cd1e2e-8276-4007-9b8f-33772b4c5e26",
+                    "path": "<Mouse>/delta/y",
+                    "interactions": "",
+                    "processors": "Normalize(max=1)",
+                    "groups": "",
+                    "action": "lookY",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "da892bf7-0035-4938-ae98-047f621f4bae",
+                    "path": "<Mouse>/delta/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "lookX",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
