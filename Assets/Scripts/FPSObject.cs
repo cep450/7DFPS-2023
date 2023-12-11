@@ -7,6 +7,7 @@ using UnityEngine;
 	Superclass. 
 	1. Has health, can be damaged and die, upon which something happens. 
 	2. Can damage other things or own projectiles that do, and get credit for killing them. Might only damage certain types of things.
+	Player and enemies inherit from this, as might other props. 
 
 	Plenty of things have hp. players, enemies, even level objects that might explode or break. 
 	objects that [inherit? implement?] HP can be told they're taking damage and handle what happens as a result.

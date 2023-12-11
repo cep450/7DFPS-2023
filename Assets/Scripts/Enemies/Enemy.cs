@@ -9,6 +9,8 @@ public class Enemy : FPSObject
 	//maybe attacks are scripts? not sure 
 
 	Color color = Color.magenta; //debug and potentially more 
+	[SerializeField] bool backstabbable = false;
+	[SerializeField] bool gardenable = false;
 
     // Start is called before the first frame update
     void Start()
