@@ -22,6 +22,6 @@ public class Explosion : MonoBehaviour
 	//TODO leave marks/decals on geometry 
 
 	
-
+	//explodes on function or on instantiate?
 
 }

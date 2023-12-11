@@ -67,6 +67,24 @@ public class Weapon : MonoBehaviour
         
     }
 
+	public void Fire() {
+
+	}
+
+
+	public void FireHitscan() {
+
+	}
+
+	public void FireProjectile() {
+
+		//TODO instantiate at the right location 
+
+		//TODO set the projectile's owner to the player 
+
+
+	}
+
 
 	//switch to this weapon 
 	public void SwitchTo() {

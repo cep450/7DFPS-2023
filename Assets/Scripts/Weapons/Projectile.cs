@@ -9,6 +9,7 @@ public class Projectile : MonoBehaviour
 
 	//mechanical 
 	[SerializeField] int dmg = 1; //default dmg- can give this other properties like ramp up or w/e by overriding CalculateDmg
+	[SerializeField] float velocity = 1f;
 	[SerializeField] Explosion explosion = null; //if null, doesn't explode
 	
 	//visual 
@@ -34,7 +35,7 @@ public class Projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //TODO move
     }
 
 	void HitSomething() {
