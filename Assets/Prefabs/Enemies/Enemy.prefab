@@ -44,5 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c28831076103558489d2d2f80eb57924, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Enemy
+  name: ADversary
   hpMax: 1
+  backstabbable: 0
+  gardenable: 0

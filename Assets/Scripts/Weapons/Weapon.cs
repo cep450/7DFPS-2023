@@ -83,7 +83,7 @@ public class Weapon : MonoBehaviour
 			return;
 		}
 
-		if(fireMode >= fireModes.length) {
+		if(fireMode >= fireModes.Length) {
 			Debug.Log("Tried to fire mode " + fireMode + ", which weapon " + name + " doesn't have.");
 			//TODO maybe a sound effect for trying to altfire on a gun that doesn't have one? or doesn't need it 
 			return;
