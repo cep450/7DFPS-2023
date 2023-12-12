@@ -42,7 +42,6 @@ public class Player : FPSObject
 	public void OnJump(InputAction.CallbackContext context)
 	{
 		if (!characterController.isGrounded) {
-			Debug.Log("Not grounded!");
 			return;
 		}
 
@@ -52,12 +51,10 @@ public class Player : FPSObject
 		}
 	}
 
+	private Vector3 inputDir;
 	public void OnMove(InputAction.CallbackContext context) {
-		var input = context.ReadValue<Vector3>();
-		currentMovement = (transform.TransformDirection(Vector3.forward) * input.z) + (transform.TransformDirection(Vector3.right) * input.x);
-
-
-	}
+		 inputDir = context.ReadValue<Vector3>();
+    }
 
 	public void OnLookRight(InputAction.CallbackContext context) {
 		float rotation = context.ReadValue<float>();
@@ -76,12 +73,20 @@ public class Player : FPSObject
     // Update is called once per frame
     void Update()
     {
-		if (!characterController.isGrounded)
-			currentMovement.y -= gravity * Time.deltaTime;
-
-		characterController.Move(currentMovement * movementSpeed * Time.deltaTime);
+		CharacterMovement();
     }
 
+	private void CharacterMovement() {
+        var dir = (transform.TransformDirection(Vector3.forward) * inputDir.z) + (transform.TransformDirection(Vector3.right) * inputDir.x);
+		
+		currentMovement.x = dir.x;
+		currentMovement.z = dir.z;
+        if (!characterController.isGrounded)
+            currentMovement.y -= gravity * Time.deltaTime;
+
+
+        characterController.Move(currentMovement * movementSpeed * Time.deltaTime);
+    }
 
 
 
