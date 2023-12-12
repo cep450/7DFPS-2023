@@ -16,6 +16,7 @@ public class Player : FPSObject
     [SerializeField] private float gravity = 2f;
 	[SerializeField] private float jumpForce = 5f;
 	[SerializeField] private float crouchSpeed = 3f;
+	[SerializeField] private float slopeSpeed = 6f;
 
     [Header("Look")]
 	[SerializeField, Range(0.1f, 10)] private float lookSpeedX = 2;
@@ -30,6 +31,20 @@ public class Player : FPSObject
 	[SerializeField] private float timeToCrouch = 0.25f;
 	[SerializeField] private Vector3 crouchingCenter = new Vector3(0, 0.5f, 0);
 	[SerializeField] private Vector3 standingCenter = new Vector3(0, 0, 0);
+
+	private Vector3 hitPointNormal;
+	private bool IsSliding
+	{
+		get {
+			if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 1f)) {
+				hitPointNormal = slopeHit.normal;
+				return Vector3.Angle(hitPointNormal, Vector3.up) > characterController.slopeLimit;
+			}
+			else {
+				return false;
+			}
+		}
+	}
 
 	private bool isCrouching = false;
 	private bool duringCrouchAnimation = false;
