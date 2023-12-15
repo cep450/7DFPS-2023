@@ -16,6 +16,7 @@ public class Player : FPSObject
 	[SerializeField] private bool canCrouch = true;
 	[SerializeField] private bool canHeadbob = true;
 	[SerializeField] private bool willSlideOnSlopes = true;
+	[SerializeField] private bool canGrapple = true;
 
 	[Header("Movement")]
 	[SerializeField] private float walkSpeed = 5f;
@@ -57,14 +58,12 @@ public class Player : FPSObject
 	[SerializeField] private float slideYScale;
 	[SerializeField] private Vector3 slidingCenter = new Vector3(0, 0.35f, 0);
 
-	private float slideTimer = 0;
-	private float startYScale = 0;
-	private bool isSliding = false;
-
-	private float defaultYPos = 0;
 	private float timer = 0;
 
 	private Vector3 hitPointNormal;
+
+	public enum MovementState { Running, Sprinting, Crouching, Sliding, SlopeSliding, Grappling, Freeze }
+	private MovementState state = MovementState.Running;
 	private bool IsSliding
 	{
 		get {
@@ -78,7 +77,14 @@ public class Player : FPSObject
 		}
 	}
 
-	private bool isCrouching = false;
+
+    private float slideTimer = 0;
+    private float startYScale = 0;
+    private bool isSliding = false;
+    private bool isFrozen = false;
+    private float defaultYPos = 0;
+
+    private bool isCrouching = false;
 	private bool duringCrouchAnimation = false;
 
 
@@ -119,19 +125,24 @@ public class Player : FPSObject
 		}
 
 		if (context.phase == InputActionPhase.Performed) {
-			if (isCrouching) {
-				ToggleCrouch();
-				return;
-			}
-			currentMovement.y = jumpForce;
+
+            if (state == MovementState.Crouching) {
+                ToggleCrouch();
+                state = MovementState.Running;
+                return;
+            }
+
+
+            currentMovement.y = jumpForce;
 			
 		}
 	}
 	public void OnMove(InputAction.CallbackContext context) {
 		// Don't change directions while sliding
-		if (isSliding)
+		if (state == MovementState.Sliding)
 			return;
 
+		
 		inputDir = context.ReadValue<Vector3>();
 	}
 
@@ -155,15 +166,14 @@ public class Player : FPSObject
 		
 
 		if (context.phase == InputActionPhase.Started) {
-            if (isCrouching) {
-                ToggleCrouch();
-            }
+			if (state == MovementState.Crouching) {
+				ToggleCrouch();
+			}
 
-            isSprinting = true;
+			state = MovementState.Sprinting;
 		}
 		else if (context.phase == InputActionPhase.Canceled){
-			Debug.Log("Disabling");
-			isSprinting = false;
+			state = MovementState.Running;
 		}
 	}
 
@@ -175,14 +185,31 @@ public class Player : FPSObject
 			if (duringCrouchAnimation)
 				return;
 
-			if (!isSprinting) {
-				ToggleCrouch();
+			if (state == MovementState.Sprinting || 
+				(state == MovementState.Running  && IsMoving)){
+
+				Debug.Log(currentMovement.sqrMagnitude);
+				SlideCrouch();
 			}
 			else {
-				SlideCrouch();
+				ToggleCrouch();
+			}
+
+
+			if (state != MovementState.Crouching) {
+				state = MovementState.Crouching;
+			}
+			else {
+				state = MovementState.Running;
 			}
 		}
 	}
+	private bool IsMoving
+	{
+		get => Mathf.Abs(currentMovement.x) + Mathf.Abs(currentMovement.z) > 0;
+	}
+
+
 
     // Update is called once per frame
     void Update()
@@ -204,9 +231,7 @@ public class Player : FPSObject
         if (!characterController.isGrounded)
             currentMovement.y -= gravity * Time.deltaTime;
 
-		float speed = isSprinting ? sprintSpeed : walkSpeed;
-		speed = isCrouching ? crouchSpeed : speed;
-		speed = isSliding ? slideSpeed : speed;
+		float speed = GetSpeedFromState();
 
         if (willSlideOnSlopes && IsSliding) {
             currentMovement += new Vector3(hitPointNormal.x, -hitPointNormal.y, hitPointNormal.z) * slopeSpeed;
@@ -215,18 +240,51 @@ public class Player : FPSObject
         characterController.Move(currentMovement * speed * Time.deltaTime);
     }
 
-	private void HandleHeadbob() {
-		if (isSliding)
-			return;
+	private float GetSpeedFromState() {
+		switch (state) {
+			default:
+			case MovementState.Running:
+				return walkSpeed;
+			case MovementState.Sprinting:
+				return sprintSpeed;
+			case MovementState.Crouching:
+				return crouchSpeed;
+			case MovementState.Sliding:
+				return slideSpeed;
+			case MovementState.Freeze:
+				return 0;
+		}
+	}
 
-		
+	private float BobSpeedFromState(out float amount) {
+		switch (state) {
+			default:
+            case MovementState.Running:
+				amount = walkBobAmount;
+                return walkBobSpeed;
+            case MovementState.Sprinting:
+				amount = sprintBobAmount;
+                return sprintBobSpeed;
+            case MovementState.Crouching:
+				amount = crouchBobAmount;
+                return crouchBobSpeed;
+            case MovementState.Sliding:
+				amount = 1;
+                return 1;
+            case MovementState.Freeze:
+				amount = 0;
+                return 0;
+        }
+	}
+
+	private void HandleHeadbob() {
+
+		if (state == MovementState.Sliding || state == MovementState.SlopeSliding) {
+			return;
+		}
+
 		if (Mathf.Abs(currentMovement.x) > 0.1f || Mathf.Abs(currentMovement.z) > 0.1f) {
-			float speed = isSprinting ? sprintBobSpeed : walkBobSpeed;
-			float amt = isSprinting ? sprintBobAmount : walkBobAmount;
-			if (isCrouching) {
-				amt = crouchBobAmount;
-				speed = crouchBobSpeed;
-			}
+			float speed = BobSpeedFromState(out float amt);
 
             timer = (timer + (Time.deltaTime * speed)) % float.MaxValue;
 			camera.transform.localPosition = new Vector3(
@@ -237,15 +295,15 @@ public class Player : FPSObject
 	}
 
 	private void ToggleCrouch() {
-        if(isCrouching) {
+		if (state == MovementState.Crouching) {
             // check for ceiling
             if (Physics.Raycast(camera.transform.up, Vector3.up, 1f)) {
-				return;
+                return;
             }
 
         }
 
-		isCrouching = !isCrouching;
+		bool isCrouching = state != MovementState.Crouching ? true : false;
 		StartCoroutine(CrouchStand(isCrouching, crouchHeight, standingHeight, timeToCrouch, crouchingCenter, standingCenter));
     }
 
@@ -277,21 +335,13 @@ public class Player : FPSObject
 	}
 	private IEnumerator SlideThenCrouch() {
 		yield return CrouchStand(true, slideHeight, standingHeight, timeToSlide, slidingCenter, standingCenter);
-		isSliding = true;
+		state = MovementState.Sliding;
 		yield return slideDelay;
-		isCrouching = true;
+		state = MovementState.Crouching;
 		// Transition to crouch
 		yield return CrouchStand(false, slideHeight, crouchHeight, timeToSlide * 1.2f, slidingCenter, crouchingCenter);
-		isSliding = false;
+
 	}
-
-	//private void StartSlide() {
-	//	isSliding = true;
-	//}
-
-	//private void SlidingMovement() {
-	//	Vector3 inpu
-	//}
 
 
 	// weapon stuff
@@ -331,10 +381,37 @@ public class Player : FPSObject
 		currentWeaponIndex = index;
 	}
 
-	
+	public void ToggleFreeze() {
+		if (state != MovementState.Freeze) {
+			state = MovementState.Freeze;
+		}
+		else {
+			state = MovementState.Running;
+		}
+	}
 
+	public void ToggleFreeze(bool isOn) {
+        if (isOn) {
+            state = MovementState.Freeze;
+        }
+        else {
+            state = MovementState.Running;
+        }
+    }
+
+	public void JumpToPosition(Vector3 targetPosition, float trajectoryHeight) {
+		currentMovement = CalculateJumpVelocity(transform.position, targetPosition, trajectoryHeight);
+	}
 
 	// 
+	public Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight) {
+		float displacementY = endPoint.y - startPoint.y;
+		Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0, endPoint.z - startPoint.z);
+
+		Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectoryHeight);
+		Vector3 velocityXZ = displacementXZ / (Mathf.Sqrt(-2 * gravity * trajectoryHeight / gravity) + Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity));
+		return velocityXZ + velocityY;
+	}
 
 
 	public bool Airborne {
@@ -345,9 +422,11 @@ public class Player : FPSObject
 		//ex. checks if airborne to check if you can jump, checks if airborne to determine if that rifle can scope 
 	}
 
-	
+	public bool CanGrapple { get => canGrapple; }
 
-	public override void Die() {
+    private const float MOVETOLERANCE = 0.0001f;
+
+    public override void Die() {
 		//TODO retry screen, move camera, ect 
 	}
 }
