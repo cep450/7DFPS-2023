@@ -9,20 +9,24 @@ using UnityEngine;
 
 */
 
-public class GameManager
+public class GameManager : MonoBehaviour
 {
 
 	public static bool paused { get; private set; }
     
-	public static void LoadSceneGame() {
+	public void LoadSceneGame() {
 		//TODO 
 	}
 
-	public static void LoadSceneMenu() {
+	public void LoadSceneMenu() {
 		//TODO
 	}
 
-	public static void TogglePause() {
+	public void ExitGame() {
+		//TODO
+	}
+
+	public void TogglePause() {
 
 		if(paused) {
 			UnPause();
@@ -32,12 +36,12 @@ public class GameManager
 
 	}
 
-	static void Pause() {
+	void Pause() {
 		//TODO stop time 
 		//TODO bring up pause menu ui
 	}
 
-	static void UnPause() {
+	void UnPause() {
 		//TODO close pause menu ui 
 		//TODO restart time 
 	}

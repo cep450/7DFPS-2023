@@ -310,12 +310,6 @@ public class Player : FPSObject
 		GetWeapon().TryFire(1);
 	}
 
-	//check: can we actually switch right now?
-	private bool CanSwitchWeapon() {
-		//TODO do we want there to be limitations to this? like if you're in the middle of firing? in many games you can switch cancel 
-		return true;
-	}
-
 	public void SwitchWeaponForward() {
 		int newIndex = currentWeaponIndex + 1;
 		if(newIndex >= weapons.Length){
