@@ -13,6 +13,22 @@ PrefabInstance:
       value: Rifle
       objectReference: {fileID: 0}
     - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: color.b
+      value: 0.61960787
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: color.g
+      value: 0.5411765
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: color.r
+      value: 0.8941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
       propertyPath: fireModes.Array.data[0].count
       value: 1
       objectReference: {fileID: 0}

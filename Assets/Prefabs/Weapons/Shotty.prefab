@@ -13,6 +13,18 @@ PrefabInstance:
       value: Shotty
       objectReference: {fileID: 0}
     - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: color.b
+      value: 0.25490198
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: color.g
+      value: 0.18039216
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: color.r
+      value: 0.15686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
       propertyPath: fireModes.Array.data[0].count
       value: 9
       objectReference: {fileID: 0}

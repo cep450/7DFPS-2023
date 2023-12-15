@@ -109,10 +109,11 @@ public class Player : FPSObject
 		slideDelay = new WaitForSeconds(maxSlideTime);
 
     }
-
+	
     // Start is called before the first frame update
     void Start()
     {
+		SwitchWeapon(0);
     }
 
 	public void OnJump(InputAction.CallbackContext context)

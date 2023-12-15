@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /*
 
@@ -13,17 +14,21 @@ public class GameManager : MonoBehaviour
 {
 
 	public static bool paused { get; private set; }
+
+	//TODO this class should probably also manage game speed if another class doesn't 
+	//for both pausing and slow time 
+	//though maybe another class? to keep game fucntionality away from high level stuff 
     
 	public void LoadSceneGame() {
-		//TODO 
+		SceneManager.LoadScene("Game");
 	}
 
 	public void LoadSceneMenu() {
-		//TODO
+		SceneManager.LoadScene("GameMenu");
 	}
 
 	public void ExitGame() {
-		//TODO
+		Application.Quit();
 	}
 
 	public void TogglePause() {
@@ -37,6 +42,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	void Pause() {
+		paused = true;
 		//TODO stop time 
 		//TODO bring up pause menu ui
 	}
@@ -44,6 +50,7 @@ public class GameManager : MonoBehaviour
 	void UnPause() {
 		//TODO close pause menu ui 
 		//TODO restart time 
+		paused = false;
 	}
 
 }

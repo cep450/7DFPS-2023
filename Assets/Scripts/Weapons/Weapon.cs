@@ -38,9 +38,9 @@ public class Weapon : MonoBehaviour
 
 
 	//visual 
-	[SerializeField] Color color; //color coding, useful for debug at least
-	[SerializeField] Sprite crosshair;
-	[SerializeField] GameObject model; //TODO i havent worked in 3d enough to know how to do these.
+	public Color color; //color coding, useful for debug at least
+	public Sprite crosshair;
+	public GameObject model; //TODO i havent worked in 3d enough to know how to do these.
 	//TODO animation played on fire 
 	//TODO animation played when weapon switched to 
 	//TODO animation played when switched away from 
@@ -64,7 +64,7 @@ public class Weapon : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -127,7 +127,8 @@ public class Weapon : MonoBehaviour
 	//switch to this weapon 
 	public void SwitchTo() {
 
-		//TODO play animation
+		//bring up viewmodel and crosshair in UI
+		GameUI.SetWeapon(this);
 
 		//TODO play sound 
 
@@ -136,7 +137,7 @@ public class Weapon : MonoBehaviour
 
 	//switch away from this weapon 
 	public void SwitchAway() {
-		//TODO play animation ect 
+		//TODO do we need to do anything here?
 	}
 
 	

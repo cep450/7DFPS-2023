@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
@@ -29,11 +29,22 @@ public class GameUI : MonoBehaviour
     }
 
 
+	
+	//viewmodel and crosshair
+	//pull out a weapon
+	public static void SetWeapon(Weapon weapon) {
 
+		//TODO hide the last weapon
 
-	public static void SetCrosshair(Sprite img) {
-		//weapon will use this 
-		instance.crosshairImage.sprite = img;
+		//set crosshair
+		instance.crosshairImage.sprite = weapon.crosshair;
+		//set crosshair color 
+		instance.crosshairImage.color = weapon.color;
+
+		//TODO change viewmodel 
+
+		//TODO maybe- the viewmodels have an animation that plays once on activate to tuneable speed of it being pulled out
+
 	}
 
 	public static void SetHP(int hp) {

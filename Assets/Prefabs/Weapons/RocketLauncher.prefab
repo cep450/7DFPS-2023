@@ -13,6 +13,18 @@ PrefabInstance:
       value: Rocket Launcher
       objectReference: {fileID: 0}
     - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: color.b
+      value: 0.31764707
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: color.g
+      value: 0.7686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: color.r
+      value: 0.43529415
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
       propertyPath: fireModes.Array.data[0].count
       value: 1
       objectReference: {fileID: 0}

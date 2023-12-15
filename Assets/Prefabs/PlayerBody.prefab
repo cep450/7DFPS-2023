@@ -226,18 +226,19 @@ MonoBehaviour:
   name: Player
   hpMax: 8
   weapons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 704124406920650833, guid: c8fb60c00c152bd4db1b0d144e7fc64f, type: 3}
+  - {fileID: 6471440070255420626, guid: 5c249441496103746b0b568486eaaf38, type: 3}
+  - {fileID: 3272056908723610010, guid: eecf6e7b2dc36a14f9356f249899736a, type: 3}
   canSprint: 1
   canJump: 1
   canCrouch: 1
   canHeadbob: 1
   willSlideOnSlopes: 1
-  walkSpeed: 3
+  canGrapple: 1
+  walkSpeed: 10
   sprintSpeed: 12
-  gravity: 7
-  jumpForce: 3
+  gravity: 5
+  jumpForce: 1.8
   crouchSpeed: 2
   slopeSpeed: 2
   slideSpeed: 15
