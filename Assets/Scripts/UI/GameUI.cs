@@ -41,9 +41,8 @@ public class GameUI : MonoBehaviour
 		//set crosshair color 
 		instance.crosshairImage.color = weapon.color;
 
-		//TODO change viewmodel 
-
-		//TODO maybe- the viewmodels have an animation that plays once on activate to tuneable speed of it being pulled out
+		//change viewmodel and animate
+		ViewmodelController.ChangeModel(weapon);
 
 	}
 

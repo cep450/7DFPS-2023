@@ -7,8 +7,9 @@ using UnityEngine.InputSystem;
 public class Player : FPSObject
 {
 
-
-	[SerializeField] Weapon[] weapons;
+	[SerializeField] Weapon[] startingWeapons;
+	[SerializeField] int startingWeaponId = 1;
+	Weapon[] weapons = new Weapon[10];
 
 	[Header("Functional Options")]
 	[SerializeField] private bool canSprint = true;
@@ -108,7 +109,11 @@ public class Player : FPSObject
 		startYScale = transform.localScale.y;
 		slideDelay = new WaitForSeconds(maxSlideTime);
 
-		SwitchWeapon(0);
+
+		foreach(Weapon w in startingWeapons) {
+			AddWeapon(w);
+		}
+		SwitchWeapon(startingWeaponId);
     }
 	
 
@@ -348,6 +353,11 @@ public class Player : FPSObject
 		return weapons[currentWeaponIndex];
 	}
 
+	//pick up a weapon 
+	public void AddWeapon(Weapon newWeapon) {
+		weapons[newWeapon.number] = newWeapon;
+	}
+
 	//try firing the current weapon- but may fail due to fire speed, switching, ect 
 	//the weapon knows if it can fire itself right now, it will handle that check 
 	public void TryFire() {
@@ -362,20 +372,29 @@ public class Player : FPSObject
 		if(newIndex >= weapons.Length){
 			newIndex = 0;
 		}
-		SwitchWeapon(newIndex);
+		if(!SwitchWeapon(newIndex)) { //if nothing at this index, keep going
+			SwitchWeaponForward();
+		}
 	}
 	public void SwitchWeaponBack() {
 		int newIndex = currentWeaponIndex - 1;
 		if(newIndex < 0){
 			newIndex = weapons.Length - 1;
 		}
-		SwitchWeapon(newIndex);
+		if(!SwitchWeapon(newIndex)) { //ditto
+			SwitchWeaponBack();
+		}
 	}
 	//switch to weapon at this index
-	public void SwitchWeapon(int index) {
+	//returns true if successful, false if nothing there
+	public bool SwitchWeapon(int index) {
+		if(weapons[index] == null || !weapons[index].useable) {
+			return false;
+		}
 		weapons[currentWeaponIndex].SwitchAway();
 		weapons[index].SwitchTo();
 		currentWeaponIndex = index;
+		return true;
 	}
 
 	public void ToggleFreeze() {

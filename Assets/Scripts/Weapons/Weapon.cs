@@ -26,6 +26,12 @@ public class Weapon : MonoBehaviour
 	//but he was also making a roguelike with a large number of small differences between the weapons 
 	//vs i feel like ours will be better off with few weapons with large differences 
 
+	//# id for the weapon 
+	//unique 
+	//also the number key that this weapon is 
+	//also the order it is when you scroll thru it 
+	public int number;
+	public bool useable = true;
 
 	public string name = "WEAPON"; 
 
@@ -35,6 +41,12 @@ public class Weapon : MonoBehaviour
 
 
 	//TODO wait hold on there's the whole concept of the altfire but how would scoping in be implemented 
+
+
+	//TODO: 
+	//2 options: 
+	// 1. keep weapons as an array. authoratative lsit of all possible weapons that can be picked up. give each a bool of if the player has it. disallow switching to if not
+	// 2. make weapons an arraylist. this way, weapons can be added and removed. this may fit better?
 
 
 	//visual 
@@ -64,7 +76,7 @@ public class Weapon : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+		
     }
 
     // Update is called once per frame
