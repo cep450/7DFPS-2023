@@ -37,8 +37,11 @@ public class Pickup : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
     {
-		//TODO filter like what can pick it up 
-		//probably by tagCanPickup
+		//return if not the tag that can pick it up 
+		if(!(other.gameObject.tag == tagCanPickUp)) {
+			return;
+		}
+		
         PickUp(other.gameObject);
     }
 

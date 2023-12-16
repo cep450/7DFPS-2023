@@ -9,10 +9,11 @@ public class PickupHealth : Pickup {
 
 	public override void Give(GameObject recipient) {
 		
-		if(recipient.tag.Equals(tag)) { //TODO check tag proeprly 
-			//TODO cast to player 
-			//TODO add hpAmount
-		}
+		//cast to player 
+		Player player = recipient.GetComponent<Player>();
+
+		//add hp 
+		player.ChangeHP(hpAmount);
 	}
 
 }

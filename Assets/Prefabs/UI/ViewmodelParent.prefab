@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92bef5379064c5a448074d31f1635f29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  viewmodelParent: {fileID: 8832456866075949224}
 --- !u!1 &7574970916901875292
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,7 +201,8 @@ PrefabInstance:
       value: ViewmodelCamera
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7540817910006792464, guid: d792453072a983848834d3a5a620613d, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d792453072a983848834d3a5a620613d, type: 3}
@@ -212,5 +214,10 @@ Camera:
 --- !u!4 &6231742713060412503 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1489699061371706647, guid: d792453072a983848834d3a5a620613d, type: 3}
+  m_PrefabInstance: {fileID: 4816566394023006528}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8832456866075949224 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4054595519584528872, guid: d792453072a983848834d3a5a620613d, type: 3}
   m_PrefabInstance: {fileID: 4816566394023006528}
   m_PrefabAsset: {fileID: 0}

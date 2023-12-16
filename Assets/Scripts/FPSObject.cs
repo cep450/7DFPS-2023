@@ -39,13 +39,30 @@ public class FPSObject : MonoBehaviour
         hp = hpMax;
     }
 
-	//example: something.TakeDmg(10) subtracts 10 from something's hp 
-	public void TakeDmg(int dmg) {
+	public void ChangeHP(int amount) {
 
-		hp -= dmg;
+		hp += amount;
+
+		if(amount < 0) {
+			Damaged(amount);
+		}
+		else if(amount > 0) {
+			Healed(amount);
+		}
+
 		if(hp <= 0) {
 			Die();
 		}
+	}
+
+	//called when hp is changed in a negative direction. can be overridden for special behavior ex. sfx, particles... 
+	protected virtual void Damaged(int amount) {
+
+	}
+
+	//called when hp is changed in a positive direction. can be overridden for special behavior ex. sfx, particles... 
+	protected virtual void Healed(int amount) {
+
 	}
 
 	//Called when reaches 0hp. Public so it can also be force-called if we need it.

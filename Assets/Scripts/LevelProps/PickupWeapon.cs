@@ -10,15 +10,19 @@ public class PickupWeapon : Pickup {
 
 	public override void Give(GameObject recipient) {
 		
-		if(recipient.tag.Equals("player")) { //TODO check tag proeprly 
-			//TODO cast to player 
-			//TODO add weapon
-			//TODO dispay on screen like picked up [weapon name] or sth 
-			//TODO make playe switch to weapon 
-			if(switchToOnPickup) {
-				
-			}
+		//cast to player 
+		Player player = recipient.GetComponent<Player>();
+
+		//add weapon
+		player.AddWeapon(weapon);
+
+		//TODO dispay on screen like picked up [weapon name] or sth 
+
+		//switch to weapon if applicable 
+		if(switchToOnPickup) {
+			player.SwitchWeapon(weapon.number);
 		}
+		
 	}
 
 }

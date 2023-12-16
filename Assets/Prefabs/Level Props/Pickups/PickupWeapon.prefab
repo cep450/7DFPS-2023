@@ -87,7 +87,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c3ca1786e6ae7346b2dd8c65288dc3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tagCanPickUp: player
+  tagCanPickUp: Player
   disappearsOnPickup: 1
   respawnTime: -1
   sfx: {fileID: 0}

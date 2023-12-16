@@ -444,7 +444,15 @@ public class Player : FPSObject
 
     private const float MOVETOLERANCE = 0.0001f;
 
-    public override void Die() {
+	protected override void Damaged(int amount) {
+		
+	}
+
+	protected override void Healed(int amount) {
+		 
+	}
+
+	public override void Die() {
 		//TODO retry screen, move camera, ect 
 	}
 }

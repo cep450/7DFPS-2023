@@ -13,6 +13,10 @@ PrefabInstance:
       value: Rifle
       objectReference: {fileID: 0}
     - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 919132149155446097, guid: 2eca367f226d4f04e988f0e4da827ffa, type: 3}
+    - target: {fileID: 5909933998178324364, guid: 21d01167df24dc54ba7f71618a234f79, type: 3}
       propertyPath: color.a
       value: 1
       objectReference: {fileID: 0}
