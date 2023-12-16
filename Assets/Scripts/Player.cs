@@ -96,7 +96,7 @@ public class Player : FPSObject
     private Vector3 inputDir;
     int currentWeaponIndex = 0; //index in the arraylist
 	private WaitForSeconds slideDelay = null;
-    private void Awake() {
+    private void Start() {
         characterController = GetComponent<CharacterController>();
 		camera = GetComponentInChildren<Camera>();
 		rotationX = camera.transform.localRotation.y;
@@ -108,13 +108,9 @@ public class Player : FPSObject
 		startYScale = transform.localScale.y;
 		slideDelay = new WaitForSeconds(maxSlideTime);
 
-    }
-	
-    // Start is called before the first frame update
-    void Start()
-    {
 		SwitchWeapon(0);
     }
+	
 
 	public void OnJump(InputAction.CallbackContext context)
 	{
@@ -140,7 +136,7 @@ public class Player : FPSObject
 	}
 	public void OnMove(InputAction.CallbackContext context) {
 		// Don't change directions while sliding
-		if (state == MovementState.Sliding)
+		if (state == MovementState.Sliding || state == MovementState.Grappling)
 			return;
 
 		
@@ -400,7 +396,9 @@ public class Player : FPSObject
         }
     }
 
-	public void JumpToPosition(Vector3 targetPosition, float trajectoryHeight) {
+
+
+	public void GrappleJump(Vector3 targetPosition, float trajectoryHeight) {
 		currentMovement = CalculateJumpVelocity(transform.position, targetPosition, trajectoryHeight);
 	}
 
