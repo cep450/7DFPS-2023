@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 3893252999930637579}
   - component: {fileID: 3502834494507973779}
   - component: {fileID: 8235772250815664845}
+  - component: {fileID: 2435917691296328333}
   m_Layer: 0
   m_Name: GrappleGun
   m_TagString: Untagged
@@ -297,8 +298,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.5566038, g: 0.31949228, b: 0.118147045, a: 1}
-      key1: {r: 1, g: 0, b: 0, a: 1}
+      key0: {r: 0, g: 0, b: 0, a: 1}
+      key1: {r: 0.5, g: 0, b: 0, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -336,6 +337,49 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &2435917691296328333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4142656888546027186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39aaded8713a45c41a5b2386c9eb5016, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grapplingHook: {fileID: 641215683685849725}
+  quality: 500
+  damper: 14
+  strength: 800
+  veloctiy: 10
+  waveCount: 12
+  waveHeight: 2
+  effectCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 3.2665727
+      outSlope: 3.2665727
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.04849615
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7368880516686215735
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +393,8 @@ GameObject:
   - component: {fileID: 5642380765604667616}
   - component: {fileID: 1662806544107475024}
   - component: {fileID: 5776926911991088150}
+  - component: {fileID: 641215683685849725}
+  - component: {fileID: 3265542766060545901}
   m_Layer: 0
   m_Name: PhysicsPlayer
   m_TagString: Player
@@ -394,7 +440,7 @@ MonoBehaviour:
   runSpeed: 7
   groundDrag: 4
   sprintSpeed: 10
-  wallRunSpeed: 12
+  wallRunSpeed: 8.5
   gravity: 2
   jumpForce: 15
   jumpCooldown: 0.25
@@ -406,7 +452,7 @@ MonoBehaviour:
   playerHeight: 1
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8
   walkBobSpeed: 14
   walkBobAmount: 0.035
   sprintBobSpeed: 18
@@ -558,15 +604,51 @@ MonoBehaviour:
     m_ActionId: 9285215c-f22d-455a-951e-29679b2e8fde
     m_ActionName: Gameplay/crouch[/Keyboard/c]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 641215683685849725}
+        m_TargetAssemblyTypeName: GrapplingHook, Assembly-CSharp
+        m_MethodName: StartGrapple
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 494a5b28-cd40-4db9-9c9d-36a6152fb0d8
     m_ActionName: Gameplay/grapple[/Mouse/rightButton]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3265542766060545901}
+        m_TargetAssemblyTypeName: WallRunning, Assembly-CSharp
+        m_MethodName: VerticalInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: f7319399-201f-4708-ad36-cb0986b82ed7
     m_ActionName: Gameplay/vertical[/Keyboard/s,/Keyboard/w]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3265542766060545901}
+        m_TargetAssemblyTypeName: WallRunning, Assembly-CSharp
+        m_MethodName: HorizontalInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 03045986-f763-432c-b9aa-1bc4a326d8da
     m_ActionName: Gameplay/horizontal[/Keyboard/a,/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
@@ -601,6 +683,57 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!114 &641215683685849725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7368880516686215735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad487bedcba53ee4fa7d6d9564644305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lr: {fileID: 8235772250815664845}
+  gunTip: {fileID: 3406993242493880339}
+  maxGrappleDistance: 30
+  grappleDuration: 1
+  overShootYAxis: 5
+  whatIsGrappleable:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  grapplingCooldown: 0.2
+  fovChange: 5
+--- !u!114 &3265542766060545901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7368880516686215735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b1a9273c7e5a043a360ed4aa378872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whatIsWall:
+    serializedVersion: 2
+    m_Bits: 64
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 8
+  wallRunForce: 50
+  maxWallRunTime: 1.5
+  wallJumpSideForce: 1
+  wallJumpUpForce: 1
+  wallCheckMaxDistance: 0.7
+  minJumpHeight: 2
+  useGravity: 0
+  gravityCounterForce: 0
+  exitWallTime: 0.25
+  fovChange: 6
+  tiltChange: 5
 --- !u!1 &7771656857270873829
 GameObject:
   m_ObjectHideFlags: 0
