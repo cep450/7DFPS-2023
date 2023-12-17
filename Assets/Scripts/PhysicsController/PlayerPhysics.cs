@@ -24,6 +24,7 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 1f;
     [SerializeField] private float sprintSpeed = 10f;
+    [SerializeField] private float wallRunSpeed = 12f;
     [SerializeField] private float gravity = 2f;
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float jumpCooldown = 2f;
@@ -31,6 +32,8 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] private float crouchSpeed = 3f;
     [SerializeField] private float slopeSpeed = 6f;
     [SerializeField] private float slideForce = 5f;
+    [SerializeField] private int maxJumps = 2;
+    
 
 
     [Header("Ground Check")]
@@ -69,13 +72,14 @@ public class PlayerPhysics : MonoBehaviour
     float rotationX = 0;
     Vector3 inputDir = Vector3.zero;
     Vector3 currentMovement = Vector3.zero;
-    public enum MovementState { Running, Sprinting, Crouching, Sliding, SlopeSliding, Grappling, Frozen }
+    public enum MovementState { Running, Sprinting, Crouching, Sliding, SlopeSliding, Grappling, Frozen, WallRunning }
     private MovementState state = MovementState.Running;
 
     private float jumpTimer = 0;
     private float headbobTimer = 0;
     private float defaultCamYPos = 0;
     private float crouchAmt = 0;
+    private int jumpCount = 2;
     // Start is called before the first frame update
     void Start()
     {
@@ -89,8 +93,16 @@ public class PlayerPhysics : MonoBehaviour
         collder = GetComponentInChildren<CapsuleCollider>();
         crouchAmt = transform.position.y - crouchHeight;
         playerHeight = collder.height;
+        jumpCount = maxJumps;
     }
 
+    private void OnCollisionEnter(Collision collision) {
+        if (state == MovementState.Grappling)
+            state = MovementState.Running;
+        jumpCount = maxJumps;
+
+       //Debug.Log("can move now");
+    }
 
     public void OnMove(InputAction.CallbackContext context) {
         // Don't change directions while sliding
@@ -116,9 +128,10 @@ public class PlayerPhysics : MonoBehaviour
     }
 
     public void OnJump(InputAction.CallbackContext context) {
-        if (jumpTimer > 0)
+        if (jumpTimer > 0 || jumpCount <= 0)
             return;
 
+        jumpCount--;
         if (context.phase == InputActionPhase.Performed) {
             Jump();
             jumpTimer = jumpCooldown;
@@ -126,6 +139,8 @@ public class PlayerPhysics : MonoBehaviour
     }
 
     public void OnCrouch(InputAction.CallbackContext context) {
+        if (state == MovementState.Grappling)
+            return;
 
         if (context.phase == InputActionPhase.Performed) {
             if (duringCrouchAnimation)
@@ -229,9 +244,20 @@ public class PlayerPhysics : MonoBehaviour
     // Update is called once per frame
     void Update() {
         //SpeedControl();
-        CheckGrouded(out bool needsUpdate);
+        CheckGrounded();
 
-        rb.drag = isGrounded ? groundDrag : 0;
+        if (isGrounded) {
+            if (state != MovementState.Grappling)
+                rb.drag = groundDrag;
+            else
+                rb.drag = 0;
+
+            if (jumpCount < maxJumps)
+                jumpCount = maxJumps;
+        }
+        else {
+            rb.drag = 0;
+        }
 
         if (jumpTimer > 0) {
             jumpTimer -= Time.deltaTime;
@@ -243,14 +269,15 @@ public class PlayerPhysics : MonoBehaviour
         HandleMovement();
     }
 
-    private void CheckGrouded(out bool changed) {
-        bool grounded = isGrounded;
+    private void CheckGrounded() {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight *1 + 0.2f, whatIsGround);
-        changed = grounded != isGrounded;
     }
 
 
     private void HandleMovement() {
+        if (state == MovementState.Grappling)
+            return;
+
         var dir = (transform.forward* inputDir.z) + (transform.right * inputDir.x);
 
         currentMovement.x = dir.x;
@@ -291,6 +318,7 @@ public class PlayerPhysics : MonoBehaviour
             case MovementState.Sliding:
                 amount = 1;
                 return 1;
+            case MovementState.WallRunning:
             case MovementState.Frozen:
                 amount = 0;
                 return 0;
@@ -358,6 +386,8 @@ public class PlayerPhysics : MonoBehaviour
                 return crouchSpeed;
             case MovementState.Sliding:
                 return slideForce;
+            case MovementState.WallRunning:
+                return wallRunSpeed;
             case MovementState.Frozen:
                 return 0;
         }
@@ -373,5 +403,46 @@ public class PlayerPhysics : MonoBehaviour
     }
 
 
+
+    private Vector3 grappleVel = Vector3.zero;
+    public void GrappleJump(Vector3 targetPosition, float trajectoryHeight) {
+        state = MovementState.Grappling;
+        rb.drag = 0;
+        velocityToSet = CalculateJumpVelocity(transform.position, targetPosition, trajectoryHeight);
+         Invoke(nameof(SetVelocity), 0.1f);
+
+    }
+
+    private Vector3 velocityToSet;
+    private void SetVelocity() {
+        rb.velocity = velocityToSet;
+
+        //  cam.DoFov(grappleFov);
+    }
+    // 
+    public Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight) {
+        float gravity = Physics.gravity.y;
+        float displacementY = endPoint.y - startPoint.y;
+        Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0f, endPoint.z - startPoint.z);
+
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectoryHeight);
+        Vector3 velocityXZ = displacementXZ / (Mathf.Sqrt(-2 * trajectoryHeight / gravity)
+            + Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity));
+
+        return velocityXZ + velocityY;
+    }
+
+    public bool IsWallRunning { 
+        get { return state == MovementState.WallRunning; } 
+        set {
+            if (value) {
+                state = MovementState.WallRunning;
+            }
+            else {
+                state = MovementState.Running;
+            }
+        }
+    }
+    public bool IsGrounded { get => isGrounded; }
     private bool IsMoving { get => Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z) > 0; }
 }

@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,6 +11,7 @@ public class GrapplingHook : MonoBehaviour
     [Header("Grappling Parameters")]
     [SerializeField] private float maxGrappleDistance = 15;
     [SerializeField] private float grappleDuration = 1;
+    [SerializeField] private float overShootYAxis = 1;
     [SerializeField] private LayerMask whatIsGrappleable;
 
     [Header("Cooldown")]
@@ -52,25 +51,43 @@ public class GrapplingHook : MonoBehaviour
         }
 
         //grappling = true;
-
+        player.ToggleFreeze(true);
+        Debug.DrawRay(cameraTransform.position, cameraTransform.forward * maxGrappleDistance, Color.green, 2);
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, maxGrappleDistance)) {
+            Debug.Log("hit");
             grapplePoint = hit.point;
-            StartGrapple(grappleDuration);
+            ExectueGrapple(grappleDuration);
             // Invoke grapple
         }
         else {
             grapplePoint = cameraTransform.position + cameraTransform.forward * maxGrappleDistance;
             //Grapple(0, true);
+            ExectueGrapple(grappleDuration, false);
             // invoke stop grapple
         }
     }
 
-    private void StartGrapple(float grappleTime, bool stop = false) {
+    private void StartGrapple() {
+
+    }
+
+    private void ExectueGrapple(float grappleTime, bool hit = true) {
         grappling = true;
         lr.enabled = true;
         lr.SetPosition(0, gunTip.position);
         lr.SetPosition(1, grapplePoint);
-        player.ToggleFreeze(true);
+
+        if (hit) {
+            Vector3 lowestPoint = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
+
+            float grapplePointRelativeYPos = grapplePoint.y - lowestPoint.y;
+            float highestPointOnArc = grapplePointRelativeYPos + overShootYAxis;
+
+            if (grapplePointRelativeYPos < 0) highestPointOnArc = overShootYAxis;
+
+            player.GrappleJump(grapplePoint, highestPointOnArc);
+        }
+
         StartCoroutine(Coroutine_Grapple(grappleTime));
     }
 
