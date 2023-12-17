@@ -8,11 +8,10 @@ public class Pickup : MonoBehaviour
 
 	Color color = Color.red; //for debug 
 	[SerializeField] String tagCanPickUp = "Player"; //tag on a game object that can pick this up
-	//TODO probably want a reference to a child that's the actual pickup that can be turned on and off 
 	[SerializeField] bool disappearsOnPickup = true;
 	[SerializeField] float respawnTime = -1; //after this is picked up, how long til there's another one? if negative it's one-time
 	[SerializeField] AudioClip sfx;
-	[SerializeField] GameObject modelParent;
+	[SerializeField] GameObject modelParent; //this gets turned on and off 
 	BoxCollider trigger;
 	
 	float respawnCounter = 0;
@@ -41,7 +40,7 @@ public class Pickup : MonoBehaviour
 		if(!(other.gameObject.tag == tagCanPickUp)) {
 			return;
 		}
-		
+
         PickUp(other.gameObject);
     }
 

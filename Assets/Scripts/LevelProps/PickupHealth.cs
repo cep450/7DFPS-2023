@@ -10,7 +10,7 @@ public class PickupHealth : Pickup {
 	public override void Give(GameObject recipient) {
 		
 		//cast to player 
-		Player player = recipient.GetComponent<Player>();
+		Player player = recipient.GetComponentInParent<Player>();
 
 		//add hp 
 		player.ChangeHP(hpAmount);

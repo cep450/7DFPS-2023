@@ -11,7 +11,7 @@ public class PickupWeapon : Pickup {
 	public override void Give(GameObject recipient) {
 		
 		//cast to player 
-		Player player = recipient.GetComponent<Player>();
+		Player player = recipient.GetComponentInParent<Player>();
 
 		//add weapon
 		player.AddWeapon(weapon);
