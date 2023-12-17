@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -228,6 +228,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &329328585 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4142656888546027186, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
+  m_PrefabInstance: {fileID: 7414550715058500120}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1103,6 +1108,49 @@ LineRenderer:
   m_CorrespondingSourceObject: {fileID: 8235772250815664845, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
   m_PrefabInstance: {fileID: 7414550715058500120}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1933012096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 329328585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39aaded8713a45c41a5b2386c9eb5016, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grapplingHook: {fileID: 3632882243406675161}
+  quality: 500
+  damper: 14
+  strength: 800
+  veloctiy: 10
+  waveCount: 12
+  waveHeight: 2
+  effectCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 3.2665727
+      outSlope: 3.2665727
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.04849615
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1962304278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,6 +1282,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   grapplingCooldown: 0.2
+  fovChange: 5
 --- !u!114 &3632882243406675167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1254,8 +1303,15 @@ MonoBehaviour:
     m_Bits: 8
   wallRunForce: 50
   maxWallRunTime: 1.5
+  wallJumpSideForce: 1
+  wallJumpUpForce: 1
   wallCheckMaxDistance: 0.7
   minJumpHeight: 2
+  useGravity: 0
+  gravityCounterForce: 0
+  exitWallTime: 0.25
+  fovChange: 6
+  tiltChange: 5
 --- !u!1001 &7414550715058500120
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1392,6 +1448,34 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8235772250815664845, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
+      propertyPath: m_Parameters.colorGradient.ctime1
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235772250815664845, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235772250815664845, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235772250815664845, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235772250815664845, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235772250815664845, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8235772250815664845, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.r
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 9077360684744970279, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1442,6 +1526,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7368880516686215735, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3632882243406675167}
+    - targetCorrespondingSourceObject: {fileID: 4142656888546027186, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1933012096}
   m_SourcePrefab: {fileID: 100100000, guid: 94ffc7355cfa1e146bd1fb12411987f4, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -5,6 +5,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Jobs;
+using DG.Tweening;
+using UnityEngine.UIElements.Experimental;
 
 public class PlayerPhysics : MonoBehaviour
 {
@@ -80,6 +82,8 @@ public class PlayerPhysics : MonoBehaviour
     private float defaultCamYPos = 0;
     private float crouchAmt = 0;
     private int jumpCount = 2;
+
+    private float camFov = 60;
     // Start is called before the first frame update
     void Start()
     {
@@ -94,6 +98,8 @@ public class PlayerPhysics : MonoBehaviour
         crouchAmt = transform.position.y - crouchHeight;
         playerHeight = collder.height;
         jumpCount = maxJumps;
+        camFov = camera.fieldOfView;
+
     }
 
     private void OnCollisionEnter(Collision collision) {
@@ -113,6 +119,17 @@ public class PlayerPhysics : MonoBehaviour
         inputDir = context.ReadValue<Vector3>();
     }
 
+    public void AdjustFOV(float amount, float duration = 0.25f) {
+        camera.DOFieldOfView(camFov + amount, duration);
+    }
+    public void DoFOV(float endValue, float duration = 0.25f) {
+        camera.DOFieldOfView(endValue, duration);
+    }
+
+    public void DoTilt(float zTilt, float duration = 0.25f) {
+       cameraHolder.DOLocalRotate(new Vector3(0, 0, zTilt), duration);
+    }
+
     public void OnLookRight(InputAction.CallbackContext context) {
         float rotation = context.ReadValue<float>() * lookSpeedX;
         transform.rotation *= Quaternion.Euler(0, rotation, 0);
@@ -128,7 +145,7 @@ public class PlayerPhysics : MonoBehaviour
     }
 
     public void OnJump(InputAction.CallbackContext context) {
-        if (jumpTimer > 0 || jumpCount <= 0)
+        if (jumpTimer > 0 || jumpCount <= 0 || state == MovementState.WallRunning)
             return;
 
         jumpCount--;
@@ -443,6 +460,7 @@ public class PlayerPhysics : MonoBehaviour
             }
         }
     }
+    public bool IsGrappling { get => state == MovementState.Grappling; }
     public bool IsGrounded { get => isGrounded; }
     private bool IsMoving { get => Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z) > 0; }
 }

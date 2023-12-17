@@ -17,6 +17,9 @@ public class GrapplingHook : MonoBehaviour
     [Header("Cooldown")]
     [SerializeField] private float grapplingCooldown;
 
+    [Header("Camera Effects")]
+    [SerializeField] float fovChange = 5f;
+
 
     PlayerPhysics player = null;
     private Vector3 grapplePoint;
@@ -67,16 +70,10 @@ public class GrapplingHook : MonoBehaviour
         }
     }
 
-    private void StartGrapple() {
-
-    }
-
     private void ExectueGrapple(float grappleTime, bool hit = true) {
         grappling = true;
         lr.enabled = true;
-        lr.SetPosition(0, gunTip.position);
-        lr.SetPosition(1, grapplePoint);
-
+        player.AdjustFOV(-fovChange);
         if (hit) {
             Vector3 lowestPoint = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
 
@@ -86,6 +83,9 @@ public class GrapplingHook : MonoBehaviour
             if (grapplePointRelativeYPos < 0) highestPointOnArc = overShootYAxis;
 
             player.GrappleJump(grapplePoint, highestPointOnArc);
+        }
+        else {
+            player.ToggleFreeze(false);
         }
 
         StartCoroutine(Coroutine_Grapple(grappleTime));
@@ -97,11 +97,18 @@ public class GrapplingHook : MonoBehaviour
         Debug.Log("Starting grapple for " + grappleTime + " Seconds");
         while (grappleTime > 0) {
             grappleTime-= Time.deltaTime;
-            lr.SetPosition(0, gunTip.position);
             yield return null;
         }
         grappling = false;
-        lr.enabled= false;
+       // lr.enabled= false;
+        player.AdjustFOV(0);
         player.ToggleFreeze(false);
     }
+
+    public Vector3 GetGrapplePoint() {
+        return grapplePoint;
+    }
+
+    public Vector3 GrappleGunTipPos { get => gunTip.position; }
+    public bool IsGrappling { get => grappling; }
 }

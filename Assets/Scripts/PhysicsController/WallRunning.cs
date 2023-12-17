@@ -14,6 +14,8 @@ public class WallRunning : MonoBehaviour
     [SerializeField] LayerMask whatIsGround;
     [SerializeField] float wallRunForce = 1;
     [SerializeField] float maxWallRunTime = 2;
+    [SerializeField] float wallJumpSideForce = 1;
+    [SerializeField] float wallJumpUpForce = 1;
 
 
     private float wallRunTimer = 0;
@@ -21,6 +23,19 @@ public class WallRunning : MonoBehaviour
     [Header("Wall Run Detection")]
     [SerializeField] float wallCheckMaxDistance = 1;
     [SerializeField] float minJumpHeight = 1;
+
+    [Header("Gravity")]
+    [SerializeField] bool useGravity = false;
+    [SerializeField] float gravityCounterForce = 0;
+
+    [Header("Exiting")]
+    [SerializeField] float exitWallTime = 0.25f;
+    private bool exitingWall = false;
+    private float exitTimer = 0;
+
+    [Header("Camera Parameters")]
+    [SerializeField] float fovChange = 6f;
+    [SerializeField] float tiltChange = 5f;
 
     private RaycastHit leftWallHit;
     private RaycastHit rightWallHit;
@@ -55,6 +70,23 @@ public class WallRunning : MonoBehaviour
         }
     }
 
+    public void WallJump(InputAction.CallbackContext context) {
+        if (!player.IsWallRunning )
+            return;
+
+        if (context.phase == InputActionPhase.Performed) {
+            Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
+            Vector3 forceToApply = transform.up * wallJumpUpForce + wallNormal * wallJumpSideForce;
+
+            // reset y velocity and add force
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            rb.AddForce(forceToApply, ForceMode.Impulse);
+        }
+
+    }
+
+
+
 
     private void Update() {
         CheckForWall();
@@ -73,9 +105,28 @@ public class WallRunning : MonoBehaviour
     }
 
     private void StateMachine() {
-        if ((wallLeft || wallRight) && AboveGround && verticalInput > 0) {
+        if ((wallLeft || wallRight) && AboveGround && verticalInput > 0 && !exitingWall) {
             if (!player.IsWallRunning)
                 StartWallRun();
+
+            if (wallRunTimer > 0) {
+                wallRunTimer -= Time.deltaTime;
+            }
+            else {
+                exitingWall = true;
+                exitTimer = exitWallTime;
+            }
+        }
+        else if (exitingWall) {
+            if (player.IsWallRunning) {
+                StopWallRun();
+            }
+            if (exitTimer > 0) {
+                exitTimer -= Time.deltaTime;
+            }
+            if (exitTimer < 0) {
+                exitingWall = false;
+            }
         }
         else if (player.IsWallRunning) {
             StopWallRun();
@@ -85,10 +136,22 @@ public class WallRunning : MonoBehaviour
 
     private void StartWallRun() {
         player.IsWallRunning = true;
+        wallRunTimer = maxWallRunTime;
+
+        rb.useGravity = useGravity;
+        // reset y velocity and add force
+        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+
+        player.AdjustFOV(-fovChange);
+        if (wallLeft) {
+            player.DoTilt(-tiltChange);
+        }
+        else if (wallRight) {
+            player.DoTilt(tiltChange);
+        } 
     }
 
     private void WallRunningMovement() {
-        rb.useGravity = false;
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
@@ -99,14 +162,29 @@ public class WallRunning : MonoBehaviour
             wallForward = -wallForward;
         }
 
-
+        // push forward
         rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
+
+
+        //// push to wall
+        if (!(wallLeft && horizontalInput <= 0) && !(wallRight && horizontalInput >= 0)) {
+            rb.AddForce(-wallNormal * 50, ForceMode.Force);
+        }
+
+        // weaken gravity
+        if (useGravity)
+            rb.AddForce(transform.up * gravityCounterForce, ForceMode.Force);
     }
 
 
     private void StopWallRun() {
         player.IsWallRunning = false;
         rb.useGravity = true;
+        exitingWall = true;
+        exitTimer = exitWallTime;
+        player.AdjustFOV(0);
+        player.DoTilt(0f);
+
     }
 
 
