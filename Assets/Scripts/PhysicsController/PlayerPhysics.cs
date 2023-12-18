@@ -25,9 +25,10 @@ public class PlayerPhysics : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float groundDrag = 1f;
+    [SerializeField] private float airDrag = 0f;
     [SerializeField] private float sprintSpeed = 10f;
     [SerializeField] private float wallRunSpeed = 12f;
-    [SerializeField] private float gravity = 2f;
+    [SerializeField] private float downwardVelocity = 2f;
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float jumpCooldown = 2f;
     [SerializeField] private float airMultiplier = 2f;
@@ -35,6 +36,7 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] private float slopeSpeed = 6f;
     [SerializeField] private float slideForce = 5f;
     [SerializeField] private int maxJumps = 2;
+    [SerializeField] private bool addFallSpeed = false;
     
 
 
@@ -82,6 +84,7 @@ public class PlayerPhysics : MonoBehaviour
     private float defaultCamYPos = 0;
     private float crouchAmt = 0;
     private int jumpCount = 2;
+    private float downwardForce = 0;
 
     private float camFov = 60;
     // Start is called before the first frame update
@@ -148,9 +151,9 @@ public class PlayerPhysics : MonoBehaviour
         if (jumpTimer > 0 || jumpCount <= 0 || state == MovementState.WallRunning)
             return;
 
-        jumpCount--;
         if (context.phase == InputActionPhase.Performed) {
             Jump();
+            jumpCount--;
             jumpTimer = jumpCooldown;
         }
     }
@@ -267,13 +270,17 @@ public class PlayerPhysics : MonoBehaviour
             if (state != MovementState.Grappling)
                 rb.drag = groundDrag;
             else
-                rb.drag = 0;
+                rb.drag = airDrag;
 
             if (jumpCount < maxJumps)
                 jumpCount = maxJumps;
+
+            if (downwardForce > 0) {
+                downwardForce = 0;
+            }
         }
         else {
-            rb.drag = 0;
+            rb.drag = airDrag;
         }
 
         if (jumpTimer > 0) {
@@ -287,7 +294,7 @@ public class PlayerPhysics : MonoBehaviour
     }
 
     private void CheckGrounded() {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight *1 + 0.2f, whatIsGround);
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight *0.5f + 0.2f, whatIsGround);
     }
 
 
@@ -311,7 +318,13 @@ public class PlayerPhysics : MonoBehaviour
             rb.AddForce(currentMovement.normalized * speed * 10, ForceMode.Force);
         }
         else {
-            rb.AddForce(currentMovement.normalized * speed * 10 * airMultiplier, ForceMode.Force);
+            var force = currentMovement.normalized * speed * 10 * airMultiplier;
+            if (addFallSpeed) {
+                downwardForce += downwardVelocity * Time.deltaTime;
+
+                force.y -= downwardForce;
+            }
+            rb.AddForce(force, ForceMode.Force);
         }
 
         //if (willSlideOnSlopes && IsSliding) {
