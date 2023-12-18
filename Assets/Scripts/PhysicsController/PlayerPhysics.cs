@@ -319,7 +319,7 @@ public class PlayerPhysics : MonoBehaviour
         }
         else {
             var force = currentMovement.normalized * speed * 10 * airMultiplier;
-            if (addFallSpeed) {
+            if (addFallSpeed && state != MovementState.Grappling) {
                 downwardForce += downwardVelocity * Time.deltaTime;
 
                 force.y -= downwardForce;
